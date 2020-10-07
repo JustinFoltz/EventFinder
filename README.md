@@ -1,3 +1,9 @@
+# Les autheurs
+
+- Maxime Hutinet
+
+- Justin Foltz
+
 # Le projet
 
 Le projet consiste en un  site web permettant aux utilisateurs de pouvoir trouver des évènements autour d'eux et de pouvoir les ajouter dans une liste de favoris. Les données sont récupérées aupres de l'API EventFul et placées sur une carte fournie par l'API Leaflet.
