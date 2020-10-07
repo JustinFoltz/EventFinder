@@ -1,14 +1,14 @@
-# Les autheurs
+# EventFinder
 
 - Maxime Hutinet
 
 - Justin Foltz
 
-# Le projet
+## Le projet
 
 Le projet consiste en un  site web permettant aux utilisateurs de pouvoir trouver des évènements autour d'eux et de pouvoir les ajouter dans une liste de favoris. Les données sont récupérées aupres de l'API EventFul et placées sur une carte fournie par l'API Leaflet.
 
-# Les fonctionnalités
+## Les fonctionnalités
 
 * Visualisation de concert/festival, symbolisés par des marqueurs sur une carte;
 
@@ -24,7 +24,7 @@ Le projet consiste en un  site web permettant aux utilisateurs de pouvoir trouve
 
 * Recherche d'utilisateurs et de lieux.
 
-# L'architecture
+## L'architecture
 
 Le site est regroupé en deux containers Docker : 
 
@@ -32,18 +32,18 @@ Le site est regroupé en deux containers Docker :
 
 * DB : contenant notre base de donnée MongoDB
 
-# Lancement du projet
+## Lancement du projet
 
 Afin de faciliter le lancement du projet, nous avons mis en place un fichier docker-compose.
 
-## Pré-requis
+### Pré-requis
 
 Pour pouvoir lancer ce projet, il est nécessaire d'avoir :
 
 * Docker
 * Docker-compose
 
-## Lancement
+### Lancement
 
 Le lancement du projet est effectué grace a la commande ci-dessous : 
 
@@ -53,7 +53,7 @@ docker-compose up -d
 
 Il suffit ensuite simplement d'ouvrir un navigateur et d'aller sur`localhost` ou `127.0.0.1`
 
-# Les routes
+## Les routes
 
 Notre API dispose des routes suivantes :
 
