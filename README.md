@@ -32,7 +32,26 @@ Le site est regroupé en deux containers Docker :
 
 * DB : contenant notre base de donnée MongoDB
 
-Le diagramme représentant l'architecture générale du projet est rapporté sur la Figure \ref{archi}. Les deux containers sont reliés par un réseau privé, créé via Docker. Seule l'API web est exposée sur le port 8080, mappé sur le port 80 de la machine hôte. 
+# Lancement du projet
+
+Afin de faciliter le lancement du projet, nous avons mis en place un fichier docker-compose.
+
+## Pré-requis
+
+Pour pouvoir lancer ce projet, il est nécessaire d'avoir :
+
+* Docker
+* Docker-compose
+
+## Lancement
+
+Le lancement du projet est effectué grace a la commande ci-dessous : 
+
+```bash
+docker-compose up -d
+```
+
+Il suffit ensuite simplement d'ouvrir un navigateur et d'aller sur`localhost` ou `127.0.0.1`
 
 # Les routes
 
@@ -192,25 +211,3 @@ Paramètres :
 | username  | String  | ID de l'utilisateur |
 | name  | String  | Nom de l'utilisateur |
 | pass  | String  | Mot de passe de l'utilisateur |
-
-
-# Lancement du projet
-
-Afin de faciliter le lancement du projet, nous avons mis en place un fichier docker-compose.
-
-## Pré-requis
-
-Pour pouvoir lancer ce projet, il est nécessaire d'avoir :
-
-* Docker
-* Docker-compose
-
-## Lancement
-
-Le lancement du projet est effectué grace a la commande ci-dessous : 
-
-```bash
-docker-compose up -d
-```
-
-Il suffit ensuite simplement d'ouvrir un navigateur et d'aller sur`localhost` ou `127.0.0.1`
