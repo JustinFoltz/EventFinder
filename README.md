@@ -1,8 +1,8 @@
 # EventFinder
 
-- Maxime Hutinet
+**Résalisé par**: Maxime Hutinet, Justin Foltz
 
-- Justin Foltz
+**Date:** 12-2019
 
 ## Le projet
 
