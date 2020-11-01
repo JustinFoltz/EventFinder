@@ -1,10 +1,29 @@
-const request = require('request');
-let Event = require('./Event.js');
+/**
+ * @author Hutinet Maxime <maxime@hutinet.ch>
+ * @author Foltz Justin <justin.foltz@gmail.com>
+ * @description Manage and export an HTTP client for the Eventful API 
+ * Date 12.2019
+ */
 
+const request = require('request');
+const fs = require('fs');
+let Event = require('./Event.js');
+require('dotenv').config();
+const APIKey = process.env.APIKEY;
+
+
+/**
+ * HTTP client of Eventful API
+ */
 function EventfulClient() { }
 
-var APIKey = "3NmN8QDHDstXNrfC";
-
+/**
+ * Retrieve events from GPS coordinates and radius
+ * @param latitude latitude of searched event
+ * @param longitude longitude of searched event
+ * @param radius radius of searched area
+ * @return List of Event objects
+ */
 EventfulClient.prototype.search = async function(latitude, longitude, radius) {
 
     let URL = "http://api.eventful.com/json/events/search" +
@@ -18,6 +37,12 @@ EventfulClient.prototype.search = async function(latitude, longitude, radius) {
     return  await requestEvents(URL);
 }
 
+
+/**
+ * Retrieve event from ID
+ * @param eventID id of searched event
+ * @return Event objects
+*/
 EventfulClient.prototype.searchEvent = async function(eventID) {
     let URL = "http://api.eventful.com/json/events/get" +
                                 "?app_key=" + APIKey +
@@ -25,9 +50,12 @@ EventfulClient.prototype.searchEvent = async function(eventID) {
     return await requestUniqueEvent(URL);
 }
 
-/*
-* http://api.eventful.com/json/events/search?app_key=3NmN8QDHDstXNrfC&where=46.4123346,6.2650554&within=13&units=km&category=festivals_parades,music&sort_order=popularity&page_size=50";
-*/
+
+/**
+ * Retrieves several events based on a call to the Eventful API
+ * @param url Eventful url to call
+ * @return list of Event objects
+ */
 function requestEvents(url) {
   return new Promise( resolve => {
 
@@ -58,6 +86,12 @@ function requestEvents(url) {
   });
 }
 
+
+/**
+ * Retrieves one event based on a call to the Eventful API
+ * @param url Eventful url to call
+ * @return Event object
+ */
 function requestUniqueEvent(url) {
   return new Promise( resolve => {
     request(url, (err,response, body) => {

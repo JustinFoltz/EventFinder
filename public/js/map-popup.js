@@ -1,3 +1,9 @@
+/**
+ * @author Hutinet Maxime <maxime@hutinet.ch>
+ * @author Foltz Justin <justin.foltz@gmail.com>
+ * @description Manage all pop-up of th e map view
+ * Date 12.2019
+ */
 
 // Content of a search user result
 const searchUser = (username, name) => {
@@ -103,6 +109,7 @@ const editProfilUser = (username, name, age) => {
   `;
 }
 
+// Content of popup edit profil password
 const editProfilPassword = (username, name) => {
   return `
   <div style="margin-top:30px" class="form-group">

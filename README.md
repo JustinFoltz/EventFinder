@@ -1,59 +1,61 @@
 # EventFinder
 
-**Résalisé par**: Maxime Hutinet, Justin Foltz
+**Directed by**: Maxime Hutinet, Justin Foltz
 
-**Date:** 12-2019
+**Date:** 12.2019
 
-## Le projet
+## Project's description
 
-Le projet consiste en un  site web permettant aux utilisateurs de pouvoir trouver des évènements autour d'eux et de pouvoir les ajouter dans une liste de favoris. Les données sont récupérées aupres de l'API EventFul et placées sur une carte fournie par l'API Leaflet.
+EventFinder is a web application allowing users to find events (concert, festival) anywhere in the world. Users can quickly view a summary of an event, access its website for more information and add to their personal list to keep track of it. It is possible to view the list of all his friends in order to complete his own or to organize appointments.
 
-## Les fonctionnalités
+![](./img/map.jpg)
 
-* Visualisation de concert/festival, symbolisés par des marqueurs sur une carte;
+## Functionalities
 
-* Visualisation des détails d'un évènement en cliquant sur un marqueur;
+\* Visualization of concert/festival, symbolized by markers on a map;
 
-* Sauvegarde/suppression d'un évènement dans son profil;
+\* Visualization of event details by clicking on a marker;
 
-* Visualisation de son profil et du profil des autres utilisateurs;
+\* Access to event website from event details;
 
-* Inscription/autentification au site;
+\* Save/delete an event in its profile;
 
-* Ajout d'évènements à son profil depuis le profil d'un autre;
+\* Viewing one's profile and the profiles of other users;
 
-* Recherche d'utilisateurs et de lieux.
+\* Adding events to one's profile from someone else's profile;
 
-## L'architecture
+\* Search for users and locations.
 
-Le site est regroupé en deux containers Docker : 
+## Technologies
 
-- Web : contenant notre API ainsi que le front-end, exposé sur le port 8080, mappé sur le port 80 de la machine hôte;
+- API REST and HTTP server : Express.JS, jsonwebtoken, mongoose;
+- Website : HTML/CSS, JavaScript/JQuery, Bootstrap;
+- Database : MongoDB;
+- External API : Eventful (provides events), Leaflet (provides the map).
 
-* DB : contenant notre base de donnée MongoDB
+## Running the project
 
-## Lancement du projet
+**Requirements :** Docker and Docker-compose must be installed.
 
-Afin de faciliter le lancement du projet, nous avons mis en place un fichier docker-compose.
+1. Clone the repository;
 
-### Pré-requis
+2. In project root folder, run the below command : 
 
-Pour pouvoir lancer ce projet, il est nécessaire d'avoir :
+   ```bash
+   docker-compose up -d
+   ```
 
-* Docker
-* Docker-compose
+3. navigate to `localhost` or `127.0.0.1`
 
-### Lancement
+## Project's configuration
 
-Le lancement du projet est effectué grace a la commande ci-dessous : 
+Environment variables and secrets are stored in the `.env` file in the root directory. It is at least necessary to obtain an Eventful API key ([EventFul API key](https://api.eventful.com/keys)) and added to the following field :
 
-```bash
-docker-compose up -d
+```
+APIKEY=<your api key>
 ```
 
-Il suffit ensuite simplement d'ouvrir un navigateur et d'aller sur`localhost` ou `127.0.0.1`
-
-## Les routes
+## API Routes
 
 Notre API dispose des routes suivantes :
 

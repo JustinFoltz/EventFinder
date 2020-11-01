@@ -4,11 +4,16 @@ networks:
 
 services:
   db:
-    build:
-      context: ./DB
+    image: mongo:3.4-xenial
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASS}
     networks:
       - eventfinder
+    ports:
+      - "27017:27017"
   web:
+    container_name: web
     depends_on:
       - db
     build:

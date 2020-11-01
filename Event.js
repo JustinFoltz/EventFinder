@@ -1,3 +1,10 @@
+/**
+ * @author Hutinet Maxime <maxime@hutinet.ch>
+ * @author Foltz Justin <justin.foltz@gmail.com>
+ * @description Defines and exports a Event object
+ * Date 12.2019
+ */
+
 function Event(title, description, latitude, longitude, address, zipCode,
 eventfulID, cityName, countryName, eventStartTime, venueName, URL) {
     this.title = title;

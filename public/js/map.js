@@ -1,19 +1,31 @@
-/***************************************************************
- * Constants definition for jwt header and jwt jstorage
- ***************************************************************/
+/**
+ * @author Hutinet Maxime <maxime@hutinet.ch>
+ * @author Foltz Justin <justin.foltz@gmail.com>
+ * @description Manage the map view and operations
+ * Date 12.2019
+ */
 
+//---------------------------------------------------------------
+// Constants definition for jwt header and jwt jstorage
+//---------------------------------------------------------------
+
+// Defines header for json request
 let jsonHeader = function() {
   return {
     "Content-Type": "application/json",
     "Authorization": 'Bearer ' + localStorage.getItem("token")
   }
 };
+
+// Defines header for form request
 let formHeader = () => {
   return {
       "contentType": 'application/x-www-form-urlencoded; charset=UTF-8',
       "Authorization": 'Bearer ' + localStorage.getItem("token")
   }
 };
+
+// Store the jwt token in local storag
 let storeToken = (token) => {
   localStorage.setItem('token', token);
 }
@@ -21,9 +33,9 @@ let storeToken = (token) => {
 
 
 
-/***************************************************************
- * Map initialization
- ***************************************************************/
+//---------------------------------------------------------------
+// Map initialization
+//---------------------------------------------------------------
 
 let map = L.map('map').setView([46.2, 6.1667], 13);
 let searchChoice = "city";
@@ -38,9 +50,9 @@ getEvents();
 
 
 
-/***************************************************************
- * Ask user geolocalisation and recenter map if needed
- ***************************************************************/
+//---------------------------------------------------------------
+// Ask user geolocalisation and recenter map if needed
+//---------------------------------------------------------------
 
 function getLocation() {
   if (navigator.geolocation) {
@@ -55,9 +67,9 @@ getLocation();
 
 
 
-/***************************************************************
- * Manage favorite events card
- ***************************************************************/
+//---------------------------------------------------------------
+// Manage favorite events card
+//---------------------------------------------------------------
 
 $("#cards-favorite-events").hide();
 
@@ -148,9 +160,9 @@ function deleteEvent(eventID){
 
 
 
-/***************************************************************
- * Manage events on map
- ***************************************************************/
+//---------------------------------------------------------------
+// Manage events on map
+//---------------------------------------------------------------
 
 // Get the radius of the map depending of the current view
 function getMapRadiusKM(){
@@ -202,9 +214,9 @@ map.on('dragend',function(e){
 
 
 
-/***************************************************************
-* Manage searches
-***************************************************************/
+//---------------------------------------------------------------
+// Manage searches
+//---------------------------------------------------------------
 
 // Get the value of the search dropdown
 const dropdown = document.getElementById("dropdown-choice");
@@ -296,9 +308,9 @@ $(document.body).on('click', "#see-profil", function(e){
 
 
 
-/***************************************************************
-* Manage alert messages
-***************************************************************/
+//---------------------------------------------------------------
+// Manage alert messages
+//---------------------------------------------------------------
 
 // Show welcome message
 $("#welcome").hide();
@@ -336,9 +348,9 @@ function alertSWR(message, element, color){
 
 
 
-/***************************************************************
-* Logout user
-***************************************************************/
+//---------------------------------------------------------------
+// Logout user
+//---------------------------------------------------------------
 
 // Logout the user and redirect him on login page
 $(document.body).on('click', "#logout", () => {
@@ -356,9 +368,9 @@ $(document.body).on('click', "#logout", () => {
 
 
 
-/***************************************************************
-* Edit user
-***************************************************************/
+//---------------------------------------------------------------
+// Edit user
+//---------------------------------------------------------------
 
 // Open edition of user profile
 $("#edit").click( () => {

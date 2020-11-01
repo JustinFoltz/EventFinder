@@ -1,3 +1,10 @@
+/**
+ * @author Hutinet Maxime <maxime@hutinet.ch>
+ * @author Foltz Justin <justin.foltz@gmail.com>
+ * @description Manages app server and routes
+ * Date 12.2019
+ */
+
 "use strict"
 
 const express = require('express');
@@ -5,16 +12,21 @@ const app = express();
 const bodyParser = require("body-parser");
 const jwt = require('jsonwebtoken');
 const eventfulClient = require('./EventfulClient.js');
+const db = require("./DB.js");
+require('dotenv').config();
+
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-require('dotenv').config();
-const db = require("./DB/DB.js");
 
-// Création d'un user pour la démo
-db.registration("demo", "demo", "Demo");
 
-// Make sure that the user token is valid
+// -------------------------------------------------------------------------
+// APP MIDDLEWARES 
+// -------------------------------------------------------------------------
+
+/** 
+ * Auth middleware
+ */
 let auth = async(req, res, next) => {
     try {
         const token = req.header('Authorization').replace('Bearer ', '');
@@ -31,17 +43,43 @@ let auth = async(req, res, next) => {
     }
 }
 
-// Redirect the user to the /map route
+
+// -------------------------------------------------------------------------
+// APP ROUTES 
+// -------------------------------------------------------------------------
+
+/** 
+ * Redirect the user to the /map route
+ * URL: /
+ * METHOD: GET
+ * AUTHORIZATION: none
+ */ 
 app.get('/', (req, res) => {
     res.redirect('/map');
 });
 
-// Send the register.html file
+
+/** 
+ * Send the register.html file for user registration
+ * URL: /register
+ * METHOD: GET
+ * AUTHORIZATION: none
+ */
 app.get('/register', (req, res) => {
     res.sendFile("./views/register.html", { root: __dirname });
 });
 
-// Save the user in the database
+
+/** 
+ * Register the user in the database
+ * URL: /register
+ * METHOD: POST
+ * AUTHORIZATION: none
+ * BODY DATA: 
+ *  - username: username of user (unique)
+ *  - name: name of user
+ *  - pass: password of user
+ */
 app.post('/register', async (req, res) => {
     let isValid = await db.registration(req.body.username, req.body.pass, req.body.name);
     if(!isValid) {
@@ -51,12 +89,27 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// Send the login.html file
+
+/**
+ * Send the login.html file for user login
+ * URL: /login
+ * METHOD: GET
+ * AUTHORIZATION: none
+ */
 app.get('/login', (req, res) => {
     res.sendFile("./views/login.html", { root: __dirname });
 });
 
-// Save the user token in the database
+
+/** 
+ * Login the user, create and save jwt token in the database
+ * URL: /login
+ * METHOD: POST
+ * AUTHORIZATION: none
+ * BODY DATA: 
+ *  - username: username of user
+ *  - pass: password of user
+ */
 app.post("/login", async (req,res) => {
     let isValid = await db.login(req.body.username, req.body.pass);
 
@@ -72,7 +125,13 @@ app.post("/login", async (req,res) => {
     }
 });
 
-// Delete the token from the database
+
+/** 
+ * Logout the user, delete the token from the database
+ * URL: /logout
+ * METHOD: GET
+ * AUTHORIZATION: JWT
+ */
 app.get('/logout', auth, async (req, res) => {
     let response = await db.deleteToken(req.userId);
     if(response){
@@ -81,25 +140,52 @@ app.get('/logout', auth, async (req, res) => {
 
  });
 
-// Send the map.html file
+
+/** 
+ * Send the map.html file
+ * URL: /map
+ * METHOD: GET
+ * AUTHORIZATION: none
+ * NOTE: non-authenticated users are redirected to the login page 
+ */
 app.get('/map', (req, res) => {
     res.sendFile("./views/map.html", { root: __dirname });
 });
 
-// Return the username and name of the current user
+
+/** 
+ * Return the username and name of the current user
+ * URL: /profil
+ * METHOD: GET
+ * AUTHORIZATION: JWT
+ */
 app.get('/profil', auth, async (req, res) => {
     let user = await db.getProfilById(req.userId);
     res.status(200).json( {username: user.username, name: user.name, token: req.token} );
 });
 
-// Return a list of the users favorite events
+
+/** 
+ * Return a list of the users favorite events
+ * URL: /profil/favorite
+ * METHOD: GET
+ * AUTHORIZATION: JWT
+ */
 app.get('/profil/favorite', auth, async (req, res) => {
     let username = (await db.getProfilById(req.userId)).username;
     let events = await db.getEventInProfil(username);
     res.status(200).json( {events: events, token: req.token} );
 });
 
-// Add an event to the users profil
+
+/** 
+ * Add an event to the users profil
+ * URL: /profil/event
+ * METHOD: POST
+ * AUTHORIZATION: JWT
+ * BODY DATA: 
+ *  - eventID : id of event to add
+ */
 app.post('/profil/event', auth, async (req, res) => {
     new eventfulClient().searchEvent(req.body.eventID).then( async(results) => {
         let username = (await db.getProfilById(req.userId)).username;
@@ -113,7 +199,17 @@ app.post('/profil/event', auth, async (req, res) => {
     });
 });
 
-// Return a list of events depending of latitude, longitude and radius
+
+/** 
+ * Return a list of events depending of latitude, longitude and radius
+ * URL: /event/:latitude/:longitude/:radius
+ * METHOD: GET
+ * AUTHORIZATION: JWT
+ * REQUEST DATA: 
+ *  - latitude: latitude of event location
+ *  - longitude : longitude of event location
+ *  - radius : radius of search area
+ */
 app.get('/event/:latitude/:longitude/:radius', auth, (req, res) => {
     new eventfulClient().search( req.params.latitude,
                                  req.params.longitude,
@@ -123,7 +219,15 @@ app.get('/event/:latitude/:longitude/:radius', auth, (req, res) => {
                         });                        
 });
 
-// Return a list of profil matching a keyword
+
+/** 
+ * Return a list of profil matching a keyword
+ * URL: /profil/names/:name
+ * METHOD: GET
+ * AUTHORIZATION: JWT
+ * REQUEST DATA: 
+ *  - name: name of the searched user
+ */
 app.get('/profil/names/:name', auth, async (req, res) => {
     let users = await db.searchProfil(req.params.name);
     if(users){
@@ -131,7 +235,15 @@ app.get('/profil/names/:name', auth, async (req, res) => {
     }
 });
 
-// Return one single profil depending on id (used to show a profil user)
+
+/** 
+ * Return one single profil depending on id (used to show a profil user)
+ * URL: /profil/names/:name
+ * METHOD: GET
+ * AUTHORIZATION: JWT
+ * REQUEST DATA: 
+ *  - name: name of the searched user
+ */
 app.get('/profil/:name', auth, async (req, res) => {
     let user = await db.searchProfil(req.params.name);
     if(user){
@@ -142,7 +254,15 @@ app.get('/profil/:name', auth, async (req, res) => {
     }
 });
 
-// Delete a specific event from the users profil
+
+/**
+ * Delete a specific event from the users profil
+ * URL: /profil/event/:eventID
+ * METHOD: DELETE
+ * AUTHORIZATION: JWT
+ * REQUEST DATA: 
+ *  - eventID: id of event to delete
+ */
 app.delete('/profil/event/:eventID', auth, async (req, res) => {
     let username = (await db.getProfilById(req.userId)).username;
     let response = await db.removeEventInProfil(username, req.params.eventID)
@@ -151,7 +271,15 @@ app.delete('/profil/event/:eventID', auth, async (req, res) => {
     }
   });
 
-// Check if a username is already used before edition
+
+/**
+ * Check if a username is already used before edition
+ * URL: /profil/edit/check
+ * METHOD: POST
+ * AUTHORIZATION: JWT
+ * BODY DATA: 
+ *  - username: username to check
+ */
 app.post('/profil/edit/check', auth, async (req, res) => {
     let username = (await db.getProfilById(req.userId)).username;
     let isValid = true;
@@ -160,14 +288,32 @@ app.post('/profil/edit/check', auth, async (req, res) => {
     res.status(200).send( {valid:isValid, token: req.token} );
 });
 
-// Verify login before active password modification
+
+/**
+ * Verify login before active password modification
+ * URL: /profil/edit/activate
+ * METHOD: POST
+ * AUTHORIZATION: JWT
+ * BODY DATA: 
+ *  - pass: password of current user
+ */
 app.post('/profil/edit/activate', auth, async (req, res) => {
     let username = (await db.getProfilById(req.userId)).username;
     let isValid = await db.login(username, req.body.pass);
     res.status(200).send( {valid:isValid, token: req.token} );
 });
 
-// Verify login before active password modification
+
+/**
+ * Verify login before active password modification
+ * URL: /profil/edit
+ * METHOD: POST
+ * AUTHORIZATION: JWT
+ * BODY DATA: 
+ *  - username: updated username of current user
+ *  - name: updated name of current user
+ *  - pass: updated password of current user
+ */
 app.post('/profil/edit', auth, async (req, res) => {
     let user = (await db.getProfilById(req.userId));
     let username = user.username;
